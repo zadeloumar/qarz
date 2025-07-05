@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("com.google.devtools.ksp")version "1.9.20-1.0.14"
 }
 
 android {
@@ -40,6 +42,8 @@ android {
 }
 
 dependencies {
+
+
     implementation(libs.androidx.ui)
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.multidex:multidex:2.0.1")
@@ -59,4 +63,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
 }

@@ -22,6 +22,10 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import androidx.compose.foundation.text.KeyboardOptions
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.qarzi.viewmodel.AddClientViewModel
+
+
 @Composable
 fun AddClientScreen(navController: NavController) {
     var name by remember { mutableStateOf("") }
@@ -37,6 +41,8 @@ fun AddClientScreen(navController: NavController) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         passportPhotoUri = uri
     }
+
+    val viewModel: AddClientViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -103,14 +109,25 @@ fun AddClientScreen(navController: NavController) {
                 if (name.isBlank() || phone.isBlank()) {
                     Toast.makeText(context, "Имя и телефон обязательны", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Пока просто сообщение, дальше — сохранение в базу
-                    Toast.makeText(context, "Клиент добавлен", Toast.LENGTH_SHORT).show()
-                    navController.popBackStack() // Возврат назад
+                    val client = Client(
+                        name = name,
+                        phone = phone,
+                        address = address,
+                        debt = debt.toDoubleOrNull() ?: 0.0,
+                        returnDate = returnDate,
+                        passportPhotoUri = passportPhotoUri?.toString(),
+                        storeLogin = "store1" // сюда передадим логин магазина позже
+                    )
+                    viewModel.addClient(client) {
+                        Toast.makeText(context, "Клиент сохранён", Toast.LENGTH_SHORT).show()
+                        navController.popBackStack()
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("✅ Сохранить")
         }
+
     }
 }
